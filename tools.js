@@ -105,6 +105,10 @@ window.TOOLS = {
     "Endocytosis": "Active Transport notes, the active transport of macromolecules panel.",
     "Exocytosis": "Active Transport notes, the active transport of macromolecules panel.",
     "Bulk Transport": "Active Transport notes, the macromolecules panel, plus the Vesicle and Bulk Transport vocabulary.",
-    "Sodium-Potassium Pump": "Active Transport notes, the sodium-potassium pump diagrams and the purpose question beneath them."
+    "Sodium-Potassium Pump": "Active Transport notes, the sodium-potassium pump diagrams and the purpose question beneath them.",
+    "Animal Cell Diagram": "Cell Stations notes, Station 6 where you sketched and labeled an animal cell, plus the Eukaryotic Animal Cell labeling practice.",
+    "Plant Cell Diagram": "Cell Stations notes, Station 3 and Station 7, plus the Eukaryotic Plant Cell labeling practice.",
+    "Prokaryotic Cell Diagram": "Cell Stations notes, Station 8, plus the Prokaryotic Cell labeling practice.",
+    "Cell Membrane Diagram": "Cell Membrane notes, the labeled diagram at the top of the page, plus the Cell Membrane Labeling practice."
   }
 };

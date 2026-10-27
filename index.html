@@ -100,6 +100,23 @@ h2{font-family:Ovo,Georgia,serif; font-weight:400; font-size:21px; color:var(--d
 .sortgrid .opt{margin:0; text-align:center; font-size:15px}
 .empty{font-size:15px; color:var(--mute); line-height:1.55}
 .empty a{color:var(--teal); font-weight:600; cursor:pointer; text-decoration:underline}
+
+/* diagrams */
+.dgmwrap{background:#fbfdfe; border:1.5px solid var(--line); border-radius:12px; padding:6px; margin:0 0 14px}
+.dgm{display:block; width:100%; height:auto}
+.dgm .miss{fill:#fff; fill-opacity:0}
+.dgm .ring{fill:#fff; fill-opacity:0; stroke:transparent; stroke-width:3.5}
+.dgm .numtag{pointer-events:none}
+.dgm .numtag circle{fill:var(--deep)}
+.dgm .numtag .lead{stroke:var(--deep); stroke-width:2}
+.dgm .numtag text{fill:#fff; font-size:12.5px; font-weight:700; text-anchor:middle; font-family:"Titillium Web",system-ui,sans-serif}
+.dgm:not(.shownums) .numtag{display:none}
+.dgm.clickable, .dgm.clickable .ring{cursor:crosshair}
+.dgm .hot.right .ring{stroke:var(--ok); fill:#24D8A0; fill-opacity:.28}
+.dgm .hot.wrong .ring{stroke:var(--no); fill:#a3283c; fill-opacity:.18}
+.dgm .hot.reveal .ring{stroke:var(--ok); fill:#24D8A0; fill-opacity:.28; stroke-dasharray:5 3}
+.ask{font-size:17.5px; line-height:1.5; margin:0 0 12px}
+
 /* invisible tail, so a question card can always scroll to the same offset */
 #panel-practice::after{content:""; display:block; height:62vh}
 
@@ -136,6 +153,8 @@ footer em{font-style:italic}
   .chips::-webkit-scrollbar{display:none}
   .stem{font-size:16.5px}
   .sortgrid{grid-template-columns:1fr}
+  /* let diagrams use the full card width, so the click targets are as large as possible */
+  .dgmwrap{margin-left:-14px; margin-right:-14px; border-radius:0; border-left:none; border-right:none}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition:none !important; animation:none !important; scroll-behavior:auto !important}
@@ -182,7 +201,7 @@ footer em{font-style:italic}
   <section id="panel-tools" class="hidden">
     <div class="card">
       <div class="chips" id="toolChips"></div>
-      <p class="hint">Section filters change the Distractor Autopsy only. The vocabulary cards, root word cards, and Transport Sort always use the whole unit.</p>
+      <p class="hint">Section filters change the Distractor Autopsy only. The vocabulary cards, root word cards, and Transport Sort always use the whole unit, and Label the Cell has its own diagram picker.</p>
     </div>
     <div class="card">
       <h2>Vocabulary flashcards</h2>
@@ -204,6 +223,14 @@ footer em{font-style:italic}
       <div id="autopsy"></div>
       <div class="counter" id="autopsyCount"></div>
       <div class="nav"><button class="btn ghost" id="autoPrev">Back</button><button class="btn" id="autoNext">Next</button></div>
+    </div>
+    <div class="card">
+      <h2>Label the Cell</h2>
+      <p class="lead">Click the structure named above the diagram. All four diagrams, 31 structures in total.</p>
+      <div class="chips" id="figChips"></div>
+      <div id="labelBox"></div>
+      <div class="counter" id="labelCount"></div>
+      <div class="nav"><button class="btn" id="labelNext">Next structure</button></div>
     </div>
     <div class="card">
       <h2>Transport Sort</h2>
@@ -235,20 +262,23 @@ footer em{font-style:italic}
 <script src="osmosis.js"></script>
 <script src="diffusion.js"></script>
 <script src="active.js"></script>
+<script src="diagrams.js"></script>
+<script src="labeling.js"></script>
 <script src="tools.js"></script>
 <script>
 (function(){
 "use strict";
 
-var ORDER = ["stations","membrane","osmosis","diffusion","active"];
+var ORDER = ["stations","membrane","osmosis","diffusion","active","labeling"];
 var ALL = [];
 ORDER.forEach(function(id){
   var b = window.BANKS[id];
   if(!b) return;
   b.questions.forEach(function(q){
-    ALL.push({ qid: id+"-"+q.n, sec: id, secName: b.name, topic: q.topic, stem: q.stem, opts: q.opts, note: q.note || "" });
+    ALL.push({ qid: id+"-"+q.n, sec: id, secName: b.name, topic: q.topic, stem: q.stem, opts: q.opts, note: q.note || "", fig: q.fig || "" });
   });
 });
+var FIGTOPIC = { animal:"Animal Cell Diagram", plant:"Plant Cell Diagram", prokaryote:"Prokaryotic Cell Diagram", membrane:"Cell Membrane Diagram" };
 
 /* ---------- storage ---------- */
 var KEY = "unit2CellPractice.v1";
@@ -284,6 +314,13 @@ function flaggedList(){ return ALL.filter(function(q){ return !!state.flagged[q.
 function answeredList(){ return ALL.filter(function(q){ return !!state.answered[q.qid]; }); }
 function correctList(){ return ALL.filter(function(q){ var a=state.answered[q.qid]; return a && a.right; }); }
 function sourceFor(topic){ return (window.TOOLS.sources && window.TOOLS.sources[topic]) || "Your Unit 2 notes."; }
+function figHtml(key, shownums, clickable){
+  var d = window.DIAGRAMS && window.DIAGRAMS[key];
+  if(!d) return "";
+  var cls = "dgm" + (shownums ? " shownums" : "") + (clickable ? " clickable" : "");
+  return '<div class="dgmwrap"><svg class="' + cls + '" viewBox="' + d.box + '" role="img" aria-label="' +
+         esc(d.name) + ' diagram">' + d.svg + "</svg></div>";
+}
 
 /* ---------- stats ---------- */
 function renderStats(){
@@ -422,6 +459,7 @@ function renderQ(){
   if(a){
     h += '<div class="banner ' + (a.right ? "ok" : "no") + '">' + (a.right ? "Correct." : "Not quite.") + "</div>";
   }
+  if(q.fig) h += figHtml(q.fig, true, false);
   h += '<p class="stem">' + q.stem + "</p>";
 
   orderFor(q).forEach(function(oi){
@@ -523,7 +561,7 @@ function buildAutopsy(){
   var rows = [];
   src.forEach(function(q){
     q.opts.forEach(function(o){
-      if(o[1] !== 1) rows.push({ stem:q.stem, bad:o[0], why:o[2], secName:q.secName, topic:q.topic });
+      if(o[1] !== 1) rows.push({ stem:q.stem, bad:o[0], why:o[2], secName:q.secName, topic:q.topic, fig:q.fig });
     });
   });
   autopsy = shuffle(rows); ai = 0; aOpen = false;
@@ -533,6 +571,7 @@ function renderAutopsy(){
   if(!autopsy.length){ box.innerHTML = '<p class="empty">No wrong answers in this section yet.</p>'; cnt.textContent = ""; return; }
   var r = autopsy[ai];
   var h = '<div class="meta">' + esc(r.secName) + " &middot; " + esc(r.topic) + "</div>";
+  if(r.fig) h += figHtml(r.fig, true, false);
   h += '<p class="stem">' + r.stem + "</p>";
   h += '<p class="pick yours"><span class="lab">Wrong answer:</span> ' + esc(r.bad) + "</p>";
   if(aOpen){
@@ -579,12 +618,83 @@ function renderSort(){
 }
 byId("sortNext").addEventListener("click", function(){ si = (si+1)%sortDeck.length; sAnswered = null; renderSort(); });
 
+/* ---------- label the cell ---------- */
+var figPick = "animal", labelQueue = [], li = 0, lDone = null;
+
+function buildFigChips(){
+  var box = byId("figChips");
+  box.innerHTML = "";
+  window.DIAGRAM_ORDER.forEach(function(k){
+    var d = window.DIAGRAMS[k];
+    var b = document.createElement("button");
+    b.className = "chip"; b.type = "button";
+    b.textContent = d.name + " (" + d.parts.length + ")";
+    b.setAttribute("aria-pressed", String(figPick===k));
+    b.addEventListener("click", function(){ figPick = k; buildFigChips(); buildLabelQueue(); renderLabel(); });
+    box.appendChild(b);
+  });
+}
+function buildLabelQueue(){ labelQueue = shuffle(window.DIAGRAMS[figPick].parts); li = 0; lDone = null; }
+function partByKey(k){
+  var ps = window.DIAGRAMS[figPick].parts;
+  for(var i=0;i<ps.length;i++){ if(ps[i].key===k) return ps[i]; }
+  return null;
+}
+function renderLabel(){
+  var box = byId("labelBox"), cnt = byId("labelCount");
+  if(!labelQueue.length){ box.innerHTML = ""; cnt.textContent = ""; return; }
+  var p = labelQueue[li];
+  var got = lDone && lDone.picked === p.key;
+  var h = "";
+  if(lDone){
+    var missed = lDone.picked ? partByKey(lDone.picked) : null;
+    h += '<div class="banner ' + (got ? "ok" : "no") + '">' +
+         (got ? "Correct."
+              : (missed ? "Not quite. You clicked the " + esc(missed.label.toLowerCase()) + "."
+                        : "Not quite. That spot is not one of the labeled structures.")) +
+         "</div>";
+  }
+  h += '<p class="ask">Click the <b>' + esc(p.label) + "</b>.</p>";
+  h += figHtml(figPick, false, !lDone);
+  if(lDone){
+    h += '<p class="why ' + (got ? "ok" : "no") + '">' + esc(p.label) + ". " + esc(p.fn) + "</p>";
+    h += '<p class="review"><b>Where to review this:</b> ' + esc(sourceFor(FIGTOPIC[figPick])) + "</p>";
+  }
+  box.innerHTML = h;
+  cnt.textContent = (li+1) + " of " + labelQueue.length;
+
+  var svg = box.querySelector(".dgm");
+  if(!svg) return;
+  if(lDone){
+    Array.prototype.slice.call(svg.querySelectorAll(".hot")).forEach(function(g){
+      var k = g.getAttribute("data-part");
+      if(k === p.key) g.setAttribute("class", "hot " + (got ? "right" : "reveal"));
+      else if(k === lDone.picked) g.setAttribute("class", "hot wrong");
+    });
+  } else {
+    svg.addEventListener("click", function(ev){
+      var t = ev.target, hit = null;
+      while(t && t !== svg){
+        if(t.getAttribute && t.getAttribute("data-part")){ hit = t; break; }
+        t = t.parentNode;
+      }
+      lDone = { picked: hit ? hit.getAttribute("data-part") : "" };
+      renderLabel();
+    });
+  }
+}
+byId("labelNext").addEventListener("click", function(){
+  if(!labelQueue.length) return;
+  li = (li+1) % labelQueue.length; lDone = null; renderLabel();
+});
+
 var toolsReady = false;
 function renderTools(){
   buildToolChips();
-  if(!toolsReady){ buildAutopsy(); buildSort(); toolsReady = true; }
-  else { vocabDeck.reshuffle(); rootDeck.reshuffle(); buildAutopsy(); buildSort(); }
-  vocabDeck.draw(); rootDeck.draw(); renderAutopsy(); renderSort();
+  buildFigChips();
+  if(!toolsReady){ buildAutopsy(); buildSort(); buildLabelQueue(); toolsReady = true; }
+  else { vocabDeck.reshuffle(); rootDeck.reshuffle(); buildAutopsy(); buildSort(); buildLabelQueue(); }
+  vocabDeck.draw(); rootDeck.draw(); renderAutopsy(); renderSort(); renderLabel();
 }
 
 /* ---------- my review ---------- */
@@ -628,6 +738,7 @@ function renderReview(){
     var ci = correctIndex(q);
     h += '<div class="ritem">';
     h += '<div class="meta">' + esc(q.secName) + " &middot; " + esc(q.topic) + (state.flagged[q.qid] ? " &middot; flagged" : "") + "</div>";
+    if(q.fig) h += figHtml(q.fig, true, false);
     h += '<div class="rq">' + q.stem + "</div>";
     if(a){
       var yourRight = a.pick === ci;

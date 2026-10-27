@@ -5,7 +5,7 @@ dependencies, no server code. Open `index.html` and it runs.
 
 ## What is in it
 
-**50 questions across the five study guide topics**, 10 each:
+**62 questions across six sections:**
 
 | Section | File | Questions |
 |---|---|---|
@@ -14,9 +14,15 @@ dependencies, no server code. Open `index.html` and it runs.
 | Osmosis & Tonicity | `osmosis.js` | 10 |
 | Diffusion | `diffusion.js` | 10 |
 | Active Transport | `active.js` | 10 |
+| Label the Diagram | `labeling.js` | 12 |
 
 Root Words & Vocabulary is the sixth topic on your study guide. You asked to leave it out
 as a quiz section, so it appears only as flashcards in the tools tab.
+
+**Four diagrams**, in `diagrams.js`: animal cell (8 structures), plant cell (10),
+prokaryotic cell (6), and cell membrane (7). 31 labelable structures in total, covering
+everything on your station lists. They drive both the Label the Diagram quiz section and
+the Label the Cell click drill.
 
 **Three tabs:**
 
@@ -26,8 +32,11 @@ as a quiz section, so it appears only as flashcards in the tools tab.
    right or wrong, the explanations open, and a "Where to review this" line points them at
    the specific notes or lab.
 2. **Additional Practice Tools.** Vocabulary flashcards (all 22 terms), root word flashcards
-   (all 24 roots), a Distractor Autopsy built from all 100 wrong answers, and a Transport
-   Sort drill. The section chips filter the Distractor Autopsy only.
+   (all 24 roots), a Distractor Autopsy built from all 124 wrong answers, a **Label the Cell**
+   click drill, and a Transport Sort drill. In Label the Cell the student is given a structure
+   name and clicks it on the diagram, with no numbers showing, so it tests finding the
+   structure rather than recognizing its name. The section chips filter the Distractor
+   Autopsy only; Label the Cell has its own diagram picker.
 3. **My Review.** Missed, Flagged, All answered, and Correct, each showing the question,
    what the student chose, the right answer, both explanations, and the review source.
 
@@ -42,7 +51,7 @@ Same as Unit 1.
 2. **Set it to Public.** GitHub Pages is only free on public repos. A private repo will
    publish nothing and give you no error that explains why.
 3. On the new empty repo, click **uploading an existing file**.
-4. Unzip the folder on your computer, open it, select all 8 files inside, and drag those
+4. Unzip the folder on your computer, open it, select all 10 files inside, and drag those
    **files** in. Do not drag the folder itself. If you drag the folder, GitHub nests
    everything one level deep and the page will load but no questions will ever appear.
 5. Click **Commit changes**.
@@ -55,7 +64,9 @@ Same as Unit 1.
 
 - **Page loads with the header and stat tiles, but no question ever appears.** The `.js`
   files are not sitting next to `index.html`. This is the folder-instead-of-files mistake
-  from step 4. Delete the uploaded folder in GitHub and re-upload the 8 files directly.
+  from step 4. Delete the uploaded folder in GitHub and re-upload the 10 files directly.
+- **Questions appear but a diagram is blank.** `diagrams.js` did not upload. It has to sit
+  next to `index.html` like the rest.
 - **Blank white page.** Give it another two minutes. First deploys are slow.
 - **Fonts look wrong.** The page pulls Ovo and Titillium Web from Google Fonts. On a locked
   down school network it falls back to a serif and a sans serif, and everything still works.
@@ -75,8 +86,9 @@ from these files.
     ["A wrong choice", 0, "Why this one does not work."],
     ["The right choice", 1, "Correct. Why this one does."]
   ],
-  note: "Optional flag shown after submitting."   // leave out if not needed
-}
+  note: "Optional flag shown after submitting.",  // leave out if not needed
+  fig: "animal"     // optional, draws a numbered diagram above the stem.
+}                   // animal, plant, prokaryote, or membrane.
 ```
 
 Rules the page depends on:
@@ -97,6 +109,13 @@ your Google Form quizzes or the Unit 2 exam, so students practicing on this site
 seeing your live assessment items. The sources used were the Unit 2 Study Guide, the Cell
 Stations answer key, the Cell Membrane, Diffusion, Active Transport, Osmosis, and Osmosis in
 Action notes, the Osmosis in Gummy Bears lab key, and the Root Words & Vocabulary sheet.
+
+**The four diagrams were drawn from scratch in code, not traced or copied.** Your doodle
+notes are copyright Emmatheteachie and the station materials are copyright Science Is Real,
+so neither set could go on a public GitHub repo. The structures and their functions follow
+your station lists, but the artwork is original and uses your class colors. Students will
+notice the diagrams look different from their notes, which is worth a sentence in class:
+being able to find the nucleus in an unfamiliar drawing is the skill the exam is testing.
 
 **Scope decisions you made:**
 
@@ -128,6 +147,8 @@ membrane.js    Cell Membrane & Transport bank
 osmosis.js     Osmosis & Tonicity bank
 diffusion.js   Diffusion bank
 active.js      Active Transport bank
+diagrams.js    the four cell diagrams and their labelable structures
+labeling.js    Label the Diagram bank
 tools.js       flashcards, sorting drill, and the topic to review-source map
 README.md      this file
 ```
