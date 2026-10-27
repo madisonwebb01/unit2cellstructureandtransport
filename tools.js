@@ -74,7 +74,7 @@ window.TOOLS = {
 
   /* Where to review this: every topic used in the banks needs an entry here */
   sources: {
-    "Cell Theory": "Cell Stations notes, Station 1 on the history of cell theory and the Station 2 discovery timeline.",
+    "Cell Theory": "Cell Stations notes, Station 1, where you listed the three parts of cell theory.",
     "Prokaryotic vs. Eukaryotic": "Cell Stations notes, Station 4 and Station 8, plus the Prokaryotic and Eukaryotic Cells slides.",
     "Plant vs. Animal Cells": "Cell Stations notes, the Station 5 Venn diagram and the Station 3 plant organelle table.",
     "Organelle Functions": "Cell Stations notes, Station 4 and the Station 9 organelle dominoes.",

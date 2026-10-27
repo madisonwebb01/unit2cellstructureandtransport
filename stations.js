@@ -7,11 +7,11 @@ window.BANKS.stations = {
     {
       n: 1,
       topic: "Cell Theory",
-      stem: "Robert Hooke looked at a thin slice of cork under a homemade microscope and named the tiny chambers he saw.<br><b>What was his contribution to cell theory?</b>",
+      stem: "Cell theory states that all cells come from preexisting cells.<br><b>What does that rule out?</b>",
       opts: [
-        ["He was first to declare that all plant tissues are made of cells.", 0, "That was Matthias Schleiden in 1838. Hooke worked in 1665 and never claimed that every plant tissue was built from cells."],
-        ["He was first to discover and name cells.", 1, "Correct. Hooke viewed cork through a homemade microscope in 1665 and named the empty chambers cells."],
-        ["He claimed that all cells come from preexisting cells.", 0, "That claim belongs to Rudolf Virchow in 1855, almost two hundred years later. Hooke never addressed where cells come from."]
+        ["That a new cell can form on its own out of nonliving material.", 1, "Correct. This part of cell theory says a cell only ever comes from a cell that was already there, so no cell assembles itself out of nonliving matter."],
+        ["That a cell can divide to make more cells.", 0, "Division is how a cell comes from a preexisting cell, so this part of cell theory depends on division rather than ruling it out."],
+        ["That an organism can be made of only one cell.", 0, "A single-celled organism still came from an earlier cell, so cell theory allows it. The first part of cell theory says one or more cells."]
       ]
     },
     {
@@ -37,21 +37,21 @@ window.BANKS.stations = {
     {
       n: 4,
       topic: "Cell Theory",
-      stem: "<b>How did Leeuwenhoek first discover bacteria cells?</b>",
+      stem: "A biologist finds a living organism in a hot spring and has not yet looked at it under a microscope.<br><b>What does cell theory already let her say about it?</b>",
       opts: [
-        ["By examining his own dental scrapings under his microscope.", 1, "Correct. Scraping his own teeth is where Leeuwenhoek found bacteria. His other famous discovery, the single-celled protozoa he named animalcules, came from pond water."],
-        ["By examining a thin slice of cork under his microscope.", 0, "Hooke used cork, and the chambers he saw were empty cell walls, not living bacteria."],
-        ["By examining plant tissue and declaring all plants were made of cells.", 0, "Schleiden studied plant tissue and made that declaration. It had nothing to do with discovering bacteria."]
+        ["It is made of exactly one cell.", 0, "Cell theory says one or more cells. It does not tell you how many, so she cannot narrow it down without looking."],
+        ["It is built from at least one cell.", 1, "Correct. Cell theory covers all organisms, so knowing the thing is alive is enough to predict that cells build it."],
+        ["It has a nucleus.", 0, "Cell theory says nothing about nuclei. Prokaryotes are cells and have no nucleus at all."]
       ]
     },
     {
       n: 5,
       topic: "Cell Theory",
-      stem: "In 1839 one scientist declared that all animal tissues are made from cells.<br><b>Who was it?</b>",
+      stem: "Cell theory says cells are the basic unit of structure and organization in organisms.<br><b>What does that mean for something as large as a human body?</b>",
       opts: [
-        ["Matthias Schleiden", 0, "Schleiden made the same kind of claim one year earlier, in 1838, but his was about plant tissues."],
-        ["Theodor Schwann", 1, "Correct. Schwann extended Schleiden's plant work to animals in 1839."],
-        ["Rudolf Virchow", 0, "Virchow's contribution came in 1855, and it was about cells coming from preexisting cells rather than about animal tissue."]
+        ["Every structure in the body, from skin to muscle to bone, is built out of cells.", 1, "Correct. Being the basic unit means cells are the building blocks, so tissues and organs are all assembled from them."],
+        ["The body is organized by its organs, and cells are a small detail underneath that.", 0, "Organs are themselves made of cells, so the cells are what the organization is built out of rather than a detail sitting below it."],
+        ["Every cell in the body carries out the exact same job.", 0, "Cells specialize into many different jobs. Basic unit describes what the body is built from, not that the pieces are identical."]
       ]
     },
     {
